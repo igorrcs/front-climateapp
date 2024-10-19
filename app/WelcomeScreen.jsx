@@ -25,19 +25,20 @@ const WelcomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center', // Mantém o alinhamento centralizado horizontalmente
     padding: 20,
     backgroundColor: 'white', // Fundo preto
     justifyContent: 'flex-start'
 
   },
-  logo: {
-    width: 400,
-    height: 230,
-    marginBottom: 80,
-    resizeMode: 'contain',  },
-  
+
+    logo: {
+      width: 320,
+      height: 200,
+      marginBottom: 90,
+      marginTop: -20,
+    },
     welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     width: '100%',
-    marginBottom: 50,
+    marginBottom: 70,
     paddingHorizontal: 10,
     color: 'black', // Texto do input em branco
   },

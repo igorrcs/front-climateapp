@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Image
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
@@ -19,102 +22,107 @@ const LoginScreen = ({}) => {
   const [showPassword, setShowPassword] = useState(false); // Estado para controlar a exibição da senha
 
   const handleLogin = () => {
+    // Validação de campos vazios
     if (!email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
 
+    // Validação de formato de email
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       Alert.alert('Erro', 'Por favor, insira um email válido.');
       return;
     }
 
-    Alert.alert('Sucesso', 'Login realizado com sucesso!');
-    console.log('Email:', email);
-    console.log('Senha:', password);
+    // Caso as validações sejam bem-sucedidas, navega para a tela bemvindo
+    navigation.navigate('WelcomeScreen');
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require('./assets/logoclimate.jpg')} style={styles.logo} />
-      <Text style={styles.title}>Faça seu Login</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Image source={require('./assets/logoclimate.jpg')} style={styles.logo} />
+        <Text style={styles.title}>Faça seu Login</Text>
 
-      <View style={styles.inputContainer}>
-        <Icon name="envelope" size={20} color="#333" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Icon name="lock" size={24} color="#333" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword} // Mostra ou oculta o texto da senha
-        />
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-          {/* Ícone para mostrar/ocultar senha */}
-          <Icon
-            name={showPassword ? 'eye' : 'eye-slash'}
-            size={24}
-            color="#333"
+        <View style={styles.inputContainer}>
+          <Icon name="envelope" size={20} color="#333" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Icon name="lock" size={24} color="#333" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword} // Mostra ou oculta o texto da senha
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              size={24}
+              color="#333"
+            />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('WelcomeScreen')}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+        <View style={styles.socialLoginContainer}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Icon name="google" size={24} color="#EA4335" />
+            <Text style={styles.socialButtonText}>Login com Google</Text>
+          </TouchableOpacity>
 
-      <View style={styles.socialLoginContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Icon name="google" size={24} color="#EA4335" />
-          <Text style={styles.socialButtonText}>Login com Google</Text>
+          <TouchableOpacity style={styles.socialButton}>
+            <Icon name="facebook" size={24} color="#3b5998" />
+            <Text style={styles.socialButtonText}>Login com Facebook</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.link}>
+          <Text style={styles.linkText}>Esqueceu a senha?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialButton}>
-          <Icon name="facebook" size={24} color="#3b5998" />
-          <Text style={styles.socialButtonText}>Login com Facebook</Text>
+        <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('WelcomeScreen')}>
+          <Text style={styles.linkText}>Primeiro Acesso? Clique Aqui</Text>
         </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.link}>
-        <Text style={styles.linkText}>Esqueceu a senha?</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('SignupScreen')}>
-        <Text style={styles.linkText}>Primeiro Acesso? Clique Aqui</Text>
-      </TouchableOpacity>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'flex-start',  //deixar mais acima
-  
   },
   logo: {
     width: 320,
     height: 200,
     marginBottom: 30,
     marginTop: -20, // Valor negativo para mover a logo mais para cima
-},
-
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -155,22 +163,15 @@ const styles = StyleSheet.create({
   },
   link: {
     marginBottom: 10,
-     textDecorationLine: 'underline', // Sublinhado para destacar o link
-
+    textDecorationLine: 'underline', // Sublinhado para destacar o link
   },
   linkText: {
     color: '#007BFF',
     fontSize: 16,
-    textDecorationLine: 'underline', // Sublinhado para destacar o link
-
   },
   socialLoginContainer: {
     width: '100%',
     marginTop: 20,
- 
- 
- 
- 
   },
   socialButton: {
     flexDirection: 'row',
@@ -187,9 +188,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     fontWeight: 'bold',
-    
   },
-
 });
 
 export default LoginScreen;

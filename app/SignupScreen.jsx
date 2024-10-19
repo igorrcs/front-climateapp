@@ -224,8 +224,9 @@ const styles = StyleSheet.create({
   loginLink: {
     color: '#1E90FF', // Cor do link para a tela de login
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 20,
     textDecorationLine: 'underline', // Sublinhado para destacar o link
+
   },
 });
 
